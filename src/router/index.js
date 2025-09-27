@@ -5,7 +5,7 @@ import Auth from '../views/layouts/Auth.vue'
 import DashboardLayout from '../views/layouts/DashboardLayout.vue'
 
 const routes = [
-  { path: '/', component: HelloWorld },
+  { path: '/', component: HelloWorld, props: { msg: 'Welcome to Vue Todo App' } },
   { path: '/auth', component: Auth },
   { path: '/dashboard', component: DashboardLayout },
 ]
