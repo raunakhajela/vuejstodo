@@ -10,6 +10,7 @@ const app = createApp(App)
 // Plugins
 app.use(router);
 
+// Third-party Providers
 app.provide("firebaseApp", firebaseApp);
 app.mount("#app");
 

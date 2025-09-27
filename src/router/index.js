@@ -1,18 +1,23 @@
 import { createWebHistory, createRouter } from 'vue-router'
-
-import HelloWorld from '../components/HelloWorld.vue'
-import Auth from '../views/layouts/Auth.vue'
-import DashboardLayout from '../views/layouts/DashboardLayout.vue'
-
-const routes = [
-  { path: '/', component: HelloWorld, props: { msg: 'Welcome to Vue Todo App' } },
-  { path: '/auth', component: Auth },
-  { path: '/dashboard', component: DashboardLayout },
-]
+import { getAuth } from 'firebase/auth'
+import routes from './routes'
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+})
+
+router.beforeEach(async (to, _from, next) => {
+  const auth = getAuth()
+  const user = auth.currentUser
+
+  if (to.meta.requiresAuth && !user) {
+    next('/signup')
+  } else if (to.meta.requiresGuest && user) {
+    next('/dashboard')
+  } else {
+    next()
+  }
 })
 
 export default router
