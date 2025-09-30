@@ -1,13 +1,10 @@
 <script setup>
+import { ref, computed } from 'vue'
 import { useAuth } from '../composables/useAuth'
 
 const { user, logout } = useAuth()
-
-const handleLogout = () => {
-  logout()
-}
-
-const dummyTasks = [
+const newTask = ref('')
+const tasks = ref([
   {
     "id": 1,
     "title": "Buy groceries",
@@ -148,7 +145,28 @@ const dummyTasks = [
     "status": "todo",
     "completed": false
   }
-]
+]);
+
+const handleLogout = () => {
+  logout()
+}
+
+function addTask() {
+  console.log(newTask.value)
+  tasks.value.push({
+    id: tasks.value.length + 1,
+    title: newTask.value,
+    created_at: new Date().toISOString().split('T')[0],
+    status: 'backlog',
+    completed: false
+  })
+  newTask.value = ''
+}
+
+function removeTask(task) {
+  console.log(task)
+  tasks.value = tasks.value.filter(t => t !== task)
+}
 </script>
 
 <template>
@@ -177,40 +195,66 @@ const dummyTasks = [
         <div class="grid grid-cols-4 h-fit gap-4">
           <div class="border-2 border-dashed border-gray-200 rounded-lg p-6">
             <h2 class="text-lg font-bold text-gray-900 mb-4">Backlog</h2>
+            <form @submit.prevent="addTask" class="flex flex-col gap-2 mb-4">
+              <input type="text" class="w-full p-2 border border-gray-300 rounded-md" id="addTask" name="addTask" required placeholder="Add new task" v-model="newTask" />
+              <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Add task</button>
+            </form>
             <ul class="space-y-4 text-gray-600 text-base">
-              <li v-for="task in dummyTasks">
-                <input type="checkbox" class="mr-2" :checked="task.completed" />
-                {{ task.title }}</li>
+              <li v-for="task in tasks" :key="task.id" class="flex items-center justify-start gap-2">
+                <input type="checkbox" class="mr-2" v-model="task.completed" />
+                <span>{{ task.title }}</span>
+                <button @click="removeTask(task)" class="text-red-500">x</button>
+              </li>
             </ul>
           </div>
 
           <div class="border-2 border-dashed border-gray-200 rounded-lg p-6">
             <h2 class="text-lg font-bold text-gray-900 mb-4">Todo</h2>
+            <form @submit.prevent="addTask" class="flex flex-col gap-2 mb-4">
+              <input type="text" class="w-full p-2 border border-gray-300 rounded-md" id="addTask" name="addTask" required placeholder="Add new task" v-model="newTask" />
+              <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Add task</button>
+            </form>
             <ul class="space-y-4 text-gray-600 text-base">
-              <li v-for="task in dummyTasks">
-                <input type="checkbox" class="mr-2" :checked="task.completed" />
-                {{ task.title }}</li>
+              <li v-for="task in tasks" :key="task.id" class="flex items-center justify-start gap-2">
+                <input type="checkbox" class="mr-2" v-model="task.completed" />
+                <span>{{ task.title }}</span>
+                <button @click="removeTask(task)" class="text-red-500">x</button>
+              </li>
             </ul>
           </div>
 
           <div class="border-2 border-dashed border-gray-200 rounded-lg p-6">
             <h2 class="text-lg font-bold text-gray-900 mb-4">In progress</h2>
+            <form @submit.prevent="addTask" class="flex flex-col gap-2 mb-4">
+              <input type="text" class="w-full p-2 border border-gray-300 rounded-md" id="addTask" name="addTask" required placeholder="Add new task" v-model="newTask" />
+              <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Add task</button>
+            </form>
             <ul class="space-y-4 text-gray-600 text-base">
-              <li v-for="task in dummyTasks">
-                <input type="checkbox" class="mr-2" :checked="task.completed" />
-                {{ task.title }}</li>
+              <li v-for="task in tasks" :key="task.id" class="flex items-center justify-start gap-2">
+                <input type="checkbox" class="mr-2" v-model="task.completed" />
+                <span>{{ task.title }}</span>
+                <button @click="removeTask(task)" class="text-red-500">x</button>
+              </li>
             </ul>
           </div>
 
           <div class="border-2 border-dashed border-gray-200 rounded-lg p-6">
             <h2 class="text-lg font-bold text-gray-900 mb-4">Done</h2>
+            <form @submit.prevent="addTask" class="flex flex-col gap-2 mb-4">
+              <input type="text" class="w-full p-2 border border-gray-300 rounded-md" id="addTask" name="addTask" required placeholder="Add new task" v-model="newTask" />
+              <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Add task</button>
+            </form>
             <ul class="space-y-4 text-gray-600 text-base">
-              <li v-for="task in dummyTasks">
-                <input type="checkbox" class="mr-2" :checked="task.completed" />
-                {{ task.title }}</li>
+              <li v-for="task in tasks">
+                <input type="checkbox" class="mr-2" v-model="task.completed" />
+                <span>{{ task.title }}</span></li>
             </ul>
           </div>
         </div>
+
+        <!-- <pre>
+          {{ tasks }}
+        </pre> -->
       </div>
     </main>
   </div>
