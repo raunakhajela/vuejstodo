@@ -200,7 +200,7 @@ function removeTask(task) {
               <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Add task</button>
             </form>
             <ul class="space-y-4 text-gray-600 text-base">
-              <li v-for="task in tasks" :key="task.id" class="flex items-center justify-start gap-2">
+              <li v-for="task in tasks.filter(t => !t.completed)" :key="task.id" class="flex items-center justify-start gap-2">
                 <input type="checkbox" class="mr-2" v-model="task.completed" />
                 <span>{{ task.title }}</span>
                 <button @click="removeTask(task)" class="text-red-500">x</button>
@@ -215,7 +215,7 @@ function removeTask(task) {
               <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Add task</button>
             </form>
             <ul class="space-y-4 text-gray-600 text-base">
-              <li v-for="task in tasks" :key="task.id" class="flex items-center justify-start gap-2">
+              <li v-for="task in tasks.filter(t => !t.completed)" :key="task.id" class="flex items-center justify-start gap-2">
                 <input type="checkbox" class="mr-2" v-model="task.completed" />
                 <span>{{ task.title }}</span>
                 <button @click="removeTask(task)" class="text-red-500">x</button>
@@ -230,7 +230,7 @@ function removeTask(task) {
               <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Add task</button>
             </form>
             <ul class="space-y-4 text-gray-600 text-base">
-              <li v-for="task in tasks" :key="task.id" class="flex items-center justify-start gap-2">
+              <li v-for="task in tasks.filter(t => !t.completed)" :key="task.id" class="flex items-center justify-start gap-2">
                 <input type="checkbox" class="mr-2" v-model="task.completed" />
                 <span>{{ task.title }}</span>
                 <button @click="removeTask(task)" class="text-red-500">x</button>
@@ -245,7 +245,7 @@ function removeTask(task) {
               <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Add task</button>
             </form>
             <ul class="space-y-4 text-gray-600 text-base">
-              <li v-for="task in tasks">
+              <li v-for="task in tasks.filter(t => t.completed)" :key="task.id" class="flex items-center justify-start gap-2">
                 <input type="checkbox" class="mr-2" v-model="task.completed" />
                 <span>{{ task.title }}</span></li>
             </ul>
