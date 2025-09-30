@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useAuth } from '../composables/useAuth'
+import { Trash2 } from 'lucide-vue-next'
 
 const { user, logout } = useAuth()
 const newTask = ref('')
@@ -179,10 +180,8 @@ function removeTask(task) {
           </div>
           <div class="flex items-center space-x-4">
             <span class="text-gray-700">{{ user?.email }}</span>
-            <button
-              @click="handleLogout"
-              class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
-            >
+            <button @click="handleLogout"
+              class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium">
               Logout
             </button>
           </div>
@@ -196,14 +195,19 @@ function removeTask(task) {
           <div class="border-2 border-dashed border-gray-200 rounded-lg p-6">
             <h2 class="text-lg font-bold text-gray-900 mb-4">Backlog</h2>
             <form @submit.prevent="addTask" class="flex flex-col gap-2 mb-4">
-              <input type="text" class="w-full p-2 border border-gray-300 rounded-md" id="addTask" name="addTask" required placeholder="Add new task" v-model="newTask" />
-              <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Add task</button>
+              <input type="text" class="w-full p-2 border border-gray-300 rounded-md" id="addTask" name="addTask"
+                required placeholder="Add new task" v-model="newTask" />
+              <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Add
+                task</button>
             </form>
             <ul class="space-y-4 text-gray-600 text-base">
-              <li v-for="task in tasks.filter(t => !t.completed)" :key="task.id" class="flex items-center justify-start gap-2">
+              <li v-for="task in tasks.filter(t => !t.completed)" :key="task.id"
+                class="flex items-center justify-start gap-2">
                 <input type="checkbox" class="mr-2" v-model="task.completed" />
                 <span>{{ task.title }}</span>
-                <button @click="removeTask(task)" class="text-red-500">x</button>
+                <button @click="removeTask(task)" class="text-red-500">
+                  <Trash2 size="18" />
+                </button>
               </li>
             </ul>
           </div>
@@ -211,14 +215,19 @@ function removeTask(task) {
           <div class="border-2 border-dashed border-gray-200 rounded-lg p-6">
             <h2 class="text-lg font-bold text-gray-900 mb-4">Todo</h2>
             <form @submit.prevent="addTask" class="flex flex-col gap-2 mb-4">
-              <input type="text" class="w-full p-2 border border-gray-300 rounded-md" id="addTask" name="addTask" required placeholder="Add new task" v-model="newTask" />
-              <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Add task</button>
+              <input type="text" class="w-full p-2 border border-gray-300 rounded-md" id="addTask" name="addTask"
+                required placeholder="Add new task" v-model="newTask" />
+              <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Add
+                task</button>
             </form>
             <ul class="space-y-4 text-gray-600 text-base">
-              <li v-for="task in tasks.filter(t => !t.completed)" :key="task.id" class="flex items-center justify-start gap-2">
+              <li v-for="task in tasks.filter(t => !t.completed)" :key="task.id"
+                class="flex items-center justify-start gap-2">
                 <input type="checkbox" class="mr-2" v-model="task.completed" />
                 <span>{{ task.title }}</span>
-                <button @click="removeTask(task)" class="text-red-500">x</button>
+                <button @click="removeTask(task)" class="text-red-500">
+                  <Trash2 size="18" />
+                </button>
               </li>
             </ul>
           </div>
@@ -226,14 +235,19 @@ function removeTask(task) {
           <div class="border-2 border-dashed border-gray-200 rounded-lg p-6">
             <h2 class="text-lg font-bold text-gray-900 mb-4">In progress</h2>
             <form @submit.prevent="addTask" class="flex flex-col gap-2 mb-4">
-              <input type="text" class="w-full p-2 border border-gray-300 rounded-md" id="addTask" name="addTask" required placeholder="Add new task" v-model="newTask" />
-              <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Add task</button>
+              <input type="text" class="w-full p-2 border border-gray-300 rounded-md" id="addTask" name="addTask"
+                required placeholder="Add new task" v-model="newTask" />
+              <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Add
+                task</button>
             </form>
             <ul class="space-y-4 text-gray-600 text-base">
-              <li v-for="task in tasks.filter(t => !t.completed)" :key="task.id" class="flex items-center justify-start gap-2">
+              <li v-for="task in tasks.filter(t => !t.completed)" :key="task.id"
+                class="flex items-center justify-start gap-2">
                 <input type="checkbox" class="mr-2" v-model="task.completed" />
                 <span>{{ task.title }}</span>
-                <button @click="removeTask(task)" class="text-red-500">x</button>
+                <button @click="removeTask(task)" class="text-red-500">
+                  <Trash2 size="18" />
+                </button>
               </li>
             </ul>
           </div>
@@ -241,9 +255,11 @@ function removeTask(task) {
           <div class="border-2 border-dashed border-gray-200 rounded-lg p-6">
             <h2 class="text-lg font-bold text-gray-900 mb-4">Done</h2>
             <ul class="space-y-4 text-gray-600 text-base">
-              <li v-for="task in tasks.filter(t => t.completed)" :key="task.id" class="flex items-center justify-start gap-2">
+              <li v-for="task in tasks.filter(t => t.completed)" :key="task.id"
+                class="flex items-center justify-start gap-2">
                 <input type="checkbox" class="mr-2" v-model="task.completed" />
-                <span>{{ task.title }}</span></li>
+                <span>{{ task.title }}</span>
+              </li>
             </ul>
           </div>
         </div>
