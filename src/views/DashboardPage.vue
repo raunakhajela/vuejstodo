@@ -240,10 +240,6 @@ function removeTask(task) {
 
           <div class="border-2 border-dashed border-gray-200 rounded-lg p-6">
             <h2 class="text-lg font-bold text-gray-900 mb-4">Done</h2>
-            <form @submit.prevent="addTask" class="flex flex-col gap-2 mb-4">
-              <input type="text" class="w-full p-2 border border-gray-300 rounded-md" id="addTask" name="addTask" required placeholder="Add new task" v-model="newTask" />
-              <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Add task</button>
-            </form>
             <ul class="space-y-4 text-gray-600 text-base">
               <li v-for="task in tasks.filter(t => t.completed)" :key="task.id" class="flex items-center justify-start gap-2">
                 <input type="checkbox" class="mr-2" v-model="task.completed" />
