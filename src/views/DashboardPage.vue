@@ -173,6 +173,11 @@ function removeTask(task) {
   console.log(task)
   tasks.value = tasks.value.filter(t => t !== task)
 }
+
+const backlogTasks = computed(() => tasks.value.filter(t => !t.completed && t.status == 'backlog'))
+const todoTasks = computed(() => tasks.value.filter(t => !t.completed && t.status == 'todo'))
+const inProgressTasks = computed(() => tasks.value.filter(t => !t.completed && t.status == 'inProgress'))
+const doneTasks = computed(() => tasks.value.filter(t => t.completed))
 </script>
 
 <template>
@@ -194,8 +199,8 @@ function removeTask(task) {
               task</button>
           </div>
           <ul class="space-y-4 text-gray-600 text-base">
-            <li v-for="task in tasks.filter(t => !t.completed && t.status == 'backlog')" :key="task.id"
-              class="flex items-center justify-start gap-2 bg-white rounded-[8px] px-3 py-2.5 bg-white rounded-[8px] px-3 py-2.5">
+            <li v-for="task in backlogTasks" :key="task.id"
+              class="flex items-center justify-start gap-2 bg-white rounded-[8px] px-3 py-2.5">
               <input type="checkbox" v-model="task.completed" />
               <span>{{ task.title }}</span>
               <button @click="removeTask(task)" class="text-red-400">
@@ -218,7 +223,7 @@ function removeTask(task) {
               task</button>
           </div>
           <ul class="space-y-4 text-gray-600 text-base">
-            <li v-for="task in tasks.filter(t => !t.completed && t.status == 'todo')" :key="task.id"
+            <li v-for="task in todoTasks" :key="task.id"
               class="flex items-center justify-start gap-2 bg-white rounded-[8px] px-3 py-2.5">
               <input type="checkbox" class="mr-2" v-model="task.completed" />
               <span>{{ task.title }}</span>
@@ -242,7 +247,7 @@ function removeTask(task) {
               task</button>
           </div>
           <ul class="space-y-4 text-gray-600 text-base">
-            <li v-for="task in tasks.filter(t => !t.completed && t.status == 'inProgress')" :key="task.id"
+            <li v-for="task in inProgressTasks" :key="task.id"
               class="flex items-center justify-start gap-2 bg-white rounded-[8px] px-3 py-2.5">
               <input type="checkbox" class="mr-2" v-model="task.completed" />
               <span>{{ task.title }}</span>
@@ -256,7 +261,7 @@ function removeTask(task) {
         <div class="bg-[#F5F4F4] border border-[#cccccc] rounded-lg px-4 py-3">
           <h2 class="text-lg font-bold text-gray-900 mb-4">Done</h2>
           <ul class="space-y-4 text-gray-600 text-base">
-            <li v-for="task in tasks.filter(t => t.completed)" :key="task.id"
+            <li v-for="task in doneTasks" :key="task.id"
               class="flex items-center justify-start gap-2 bg-white rounded-[8px] px-3 py-2.5 line-through">
               <input type="checkbox" class="mr-2" v-model="task.completed" />
               <span>{{ task.title }}</span>
