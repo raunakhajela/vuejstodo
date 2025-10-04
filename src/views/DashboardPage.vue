@@ -1,9 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { useAuth } from '../composables/useAuth'
+import DashboardHeader from '@/components/DashboardHeader.vue'
 import { Trash2, Plus } from 'lucide-vue-next'
 
-const { user, logout } = useAuth()
 const toggleBacklogTask = ref(false)
 const toggleTodoTask = ref(false)
 const toggleInProgressTask = ref(false)
@@ -153,10 +152,6 @@ const tasks = ref([
   }
 ]);
 
-const handleLogout = () => {
-  logout()
-}
-
 function addTask(currentStatus, title) {
   console.log(title)
   if (!title) return;
@@ -182,22 +177,7 @@ function removeTask(task) {
 
 <template>
   <div class="min-h-screen bg-[#e8e8e8]">
-    <nav>
-      <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-          <div class="flex items-center">
-            <h1 class="text-xl font-semibold text-gray-900">Dashboard</h1>
-          </div>
-          <div class="flex items-center space-x-4">
-            <span class="text-gray-700">{{ user?.email }}</span>
-            <button @click="handleLogout"
-              class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium">
-              Logout
-            </button>
-          </div>
-        </div>
-      </div>
-    </nav>
+    <DashboardHeader />
 
     <main class="w-full h-screen mx-auto py-6 sm:px-6 lg:px-8">
       <div class="w-full h-full pb-20 grid grid-cols-4 gap-4 cursor-default">
