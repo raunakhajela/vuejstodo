@@ -156,6 +156,7 @@ const handleLogout = () => {
 
 function addTask(currentStatus, title) {
   console.log(title)
+  if (!title) return;
   tasks.value.push({
     id: tasks.value.length + 1,
     title,
