@@ -178,8 +178,8 @@ function removeTask(task) {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
-    <nav class="bg-white shadow">
+  <div class="min-h-screen bg-[#e8e8e8]">
+    <nav>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
           <div class="flex items-center">
@@ -198,8 +198,8 @@ function removeTask(task) {
 
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <div class="p=4 sm:px-0">
-        <div class="grid grid-cols-4 h-fit gap-4">
-          <div class="border-2 border-dashed border-gray-200 rounded-lg p-6">
+        <div class="grid grid-cols-4 gap-4">
+          <div class="bg-white border-2 border-gray-200 rounded-lg p-6">
             <h2 class="text-lg font-bold text-gray-900 mb-4">Backlog</h2>
             <div class="flex flex-col gap-2 mb-4">
               <input type="text" class="w-full p-2 border border-gray-300 rounded-md" id="addTask" name="addTask"
@@ -220,7 +220,7 @@ function removeTask(task) {
             </ul>
           </div>
 
-          <div class="border-2 border-dashed border-gray-200 rounded-lg p-6">
+          <div class="bg-white border-2 border-gray-200 rounded-lg p-6">
             <h2 class="text-lg font-bold text-gray-900 mb-4">Todo</h2>
             <div class="flex flex-col gap-2 mb-4">
               <input type="text" class="w-full p-2 border border-gray-300 rounded-md" id="addTask" name="addTask"
@@ -241,7 +241,7 @@ function removeTask(task) {
             </ul>
           </div>
 
-          <div class="border-2 border-dashed border-gray-200 rounded-lg p-6">
+          <div class="bg-white border-2 border-gray-200 rounded-lg p-6">
             <h2 class="text-lg font-bold text-gray-900 mb-4">In progress</h2>
             <div class="flex flex-col gap-2 mb-4">
               <input type="text" class="w-full p-2 border border-gray-300 rounded-md" id="addTask" name="addTask"
@@ -262,7 +262,7 @@ function removeTask(task) {
             </ul>
           </div>
 
-          <div class="border-2 border-dashed border-gray-200 rounded-lg p-6">
+          <div class="bg-white border-2 border-gray-200 rounded-lg p-6">
             <h2 class="text-lg font-bold text-gray-900 mb-4">Done</h2>
             <ul class="space-y-4 text-gray-600 text-base">
               <li v-for="task in tasks.filter(t => t.completed)" :key="task.id"
