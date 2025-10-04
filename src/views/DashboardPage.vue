@@ -266,7 +266,7 @@ function removeTask(task) {
             <h2 class="text-lg font-bold text-gray-900 mb-4">Done</h2>
             <ul class="space-y-4 text-gray-600 text-base">
               <li v-for="task in tasks.filter(t => t.completed)" :key="task.id"
-                class="flex items-center justify-start gap-2">
+                class="flex items-center justify-start gap-2 line-through">
                 <input type="checkbox" class="mr-2" v-model="task.completed" />
                 <span>{{ task.title }}</span>
               </li>
