@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import DashboardHeader from '@/components/DashboardHeader.vue'
+import AddTask from '@/components/AddTask.vue'
 import { Trash2, Plus } from 'lucide-vue-next'
 
 const toggleTaskInput = ref({ BACKLOG: false, TODO: false, INPROGRESS: false })
@@ -168,19 +169,17 @@ const tasks = ref([
   }
 ]);
 
-function addTask(statusKey) {
-  const title = newTaskTitles.value[statusKey];
-  console.log(title)
+function addTask({title, status}) {
+  console.log(title, status);
   if (!title) return;
   tasks.value.push({
     id: tasks.value.length + 1,
     title,
     created_at: new Date().toISOString().split('T')[0],
-    status: statusKey,
+    status,
     completed: false
   })
-
-  newTaskTitles.value[statusKey] = '';
+  console.log(tasks.value)
 }
 
 function removeTask(task) {
@@ -210,11 +209,7 @@ const taskByStatus = computed(() => ({
             <Plus size="18" @click="toggleTaskInput[board.key] = !toggleTaskInput[board.key]" class="cursor-pointer" />
           </div>
           <div v-if="toggleTaskInput[board.key]" class="flex flex-col gap-2 mb-4">
-            <input type="text" class="w-full p-2 border border-gray-300 rounded-md" id="addTask" name="addTask" required
-              placeholder="Add new task" v-model="newTaskTitles[board.key]" />
-            <button @click="addTask(board.key)"
-              class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Add
-              task</button>
+            <AddTask @onAddTask="addTask" :board="board.key" />
           </div>
           <ul class="space-y-4 text-gray-600 text-base">
             <li v-for="task in taskByStatus[board.key]" :key="task.id"

@@ -20,6 +20,11 @@ export function useAuth() {
   const initializeAuth = () => {
     onAuthStateChanged(auth, (firebaseUser) => {
       user.value = firebaseUser
+      if(firebaseUser) {
+        router.push('/dashboard')
+      } else {
+        router.push('/login')
+      }
       loading.value = false
     })
   }
