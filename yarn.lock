@@ -2501,6 +2501,11 @@ vite@^7.0.6:
   optionalDependencies:
     fsevents "~2.3.3"
 
+vue-demi@latest:
+  version "0.14.10"
+  resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.14.10.tgz#afc78de3d6f9e11bf78c55e8510ee12814522f04"
+  integrity sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==
+
 vue-router@4:
   version "4.5.1"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.5.1.tgz#47bffe2d3a5479d2886a9a244547a853aa0abf69"
@@ -2518,6 +2523,13 @@ vue@^3.5.18:
     "@vue/runtime-dom" "3.5.22"
     "@vue/server-renderer" "3.5.22"
     "@vue/shared" "3.5.22"
+
+vuefire@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/vuefire/-/vuefire-3.2.2.tgz#997f01cd1b8d142003bbd3366c2a941fe449bf27"
+  integrity sha512-JARgY9HhLs7xrdotQ4QA1SAmFDfSvAwUmOjx9e9lRJnmrsSW7H8ddfCQTVEHhU5NPyPJ/qKBv18Y5N13L60TGg==
+  dependencies:
+    vue-demi latest
 
 web-vitals@^4.2.4:
   version "4.2.4"

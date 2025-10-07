@@ -1,5 +1,5 @@
 import { createWebHistory, createRouter } from 'vue-router'
-import { getAuth } from 'firebase/auth'
+import { getCurrentUser } from 'vuefire'
 import routes from './routes'
 
 const router = createRouter({
@@ -7,16 +7,22 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach(async (to, _from, next) => {
-  const auth = getAuth()
-  const user = auth.currentUser
+router.beforeEach(async (to, from) => {
+  const user = await getCurrentUser()
 
+  // Handle root route redirect based on auth state
+  if (to.meta.redirectToAuth) {
+    return user ? '/dashboard' : '/signup'
+  }
+
+  // Protect authenticated routes
   if (to.meta.requiresAuth && !user) {
-    next('/signup')
-  } else if (to.meta.requiresGuest && user) {
-    next('/dashboard')
-  } else {
-    next()
+    return '/signup'
+  }
+
+  // Redirect authenticated users away from guest pages
+  if (to.meta.requiresGuest && user) {
+    return '/dashboard'
   }
 })
 

@@ -169,7 +169,7 @@ const tasks = ref([
   }
 ]);
 
-function addTask({title, status}) {
+function addTask({ title, status }) {
   console.log(title, status);
   tasks.value.push({
     id: tasks.value.length + 1,
@@ -211,13 +211,8 @@ const taskByStatus = computed(() => ({
             <AddTask @on-add-task="addTask" :board="board.key" />
           </div>
           <ul class="space-y-4 text-gray-600 text-base">
-            <TaskCard
-              v-for="task in taskByStatus[board.key]"
-              :key="task.id"
-              :task="task"
-              @update:completed="task.completed = $event"
-              @remove="removeTask"
-            />
+            <TaskCard v-for="task in taskByStatus[board.key]" :key="task.id" :task="task"
+              @update:completed="task.completed = $event" @remove="removeTask" />
           </ul>
         </div>
 

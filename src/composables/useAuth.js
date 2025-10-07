@@ -1,39 +1,35 @@
-import { ref, computed } from 'vue'
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
-} from 'firebase/auth'
+import { ref, computed, watch } from 'vue'
+import { useFirebaseAuth, useCurrentUser } from 'vuefire'
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth'
 import { useRouter } from 'vue-router'
 
-const user = ref(null)
 const loading = ref(true)
 
 export function useAuth() {
-  const auth = getAuth()
+  const auth = useFirebaseAuth()
+  const user = useCurrentUser()
   const router = useRouter()
 
   const isAuthenticated = computed(() => !!user.value)
 
   const initializeAuth = () => {
-    onAuthStateChanged(auth, (firebaseUser) => {
-      user.value = firebaseUser
-      if(firebaseUser) {
-        router.push('/dashboard')
-      } else {
+    watch(user, (firebaseUser, previousUser) => {
+      loading.value = false
+
+      // Only redirect on auth state changes, not on initial load
+      if (previousUser === undefined) return
+
+      // User just logged out
+      if (!firebaseUser && previousUser) {
         router.push('/login')
       }
-      loading.value = false
-    })
+    }, { immediate: true })
   }
 
   const login = async (email, password) => {
     try {
       loading.value = true
-      const userCredential = await signInWithEmailAndPassword(auth, email, password)
-      user.value = userCredential.user
+      await signInWithEmailAndPassword(auth, email, password)
       router.push('/dashboard')
       return { success: true }
     } catch (error) {
@@ -46,8 +42,7 @@ export function useAuth() {
   const signup = async (email, password) => {
     try {
       loading.value = true
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-      user.value = userCredential.user
+      await createUserWithEmailAndPassword(auth, email, password)
       router.push('/dashboard')
       return { success: true }
     } catch (error) {
@@ -60,7 +55,6 @@ export function useAuth() {
   const logout = async () => {
     try {
       await signOut(auth)
-      user.value = null
       router.push('/login')
     } catch (error) {
       console.error('Logout error:', error)
@@ -68,7 +62,7 @@ export function useAuth() {
   }
 
   return {
-    user: computed(() => user.value),
+    user,
     isAuthenticated,
     loading: computed(() => loading.value),
     login,
