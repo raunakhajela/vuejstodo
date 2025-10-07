@@ -2,10 +2,10 @@
 import { ref, computed } from 'vue'
 import DashboardHeader from '@/components/DashboardHeader.vue'
 import AddTask from '@/components/AddTask.vue'
-import { Trash2, Plus } from 'lucide-vue-next'
+import TaskCard from '@/components/TaskCard.vue'
+import { Plus } from 'lucide-vue-next'
 
 const toggleTaskInput = ref({ BACKLOG: false, TODO: false, INPROGRESS: false })
-const newTaskTitles = ref({ BACKLOG: '', TODO: '', INPROGRESS: '' })
 
 const listBoards = ref([
   {
@@ -171,7 +171,6 @@ const tasks = ref([
 
 function addTask({title, status}) {
   console.log(title, status);
-  if (!title) return;
   tasks.value.push({
     id: tasks.value.length + 1,
     title,
@@ -209,17 +208,16 @@ const taskByStatus = computed(() => ({
             <Plus size="18" @click="toggleTaskInput[board.key] = !toggleTaskInput[board.key]" class="cursor-pointer" />
           </div>
           <div v-if="toggleTaskInput[board.key]" class="flex flex-col gap-2 mb-4">
-            <AddTask @onAddTask="addTask" :board="board.key" />
+            <AddTask @on-add-task="addTask" :board="board.key" />
           </div>
           <ul class="space-y-4 text-gray-600 text-base">
-            <li v-for="task in taskByStatus[board.key]" :key="task.id"
-              class="flex items-center justify-start gap-2 bg-white rounded-[8px] px-3 py-2.5">
-              <input type="checkbox" v-model="task.completed" />
-              <span>{{ task.title }}</span>
-              <button @click="removeTask(task)" class="text-red-400">
-                <Trash2 size="15" />
-              </button>
-            </li>
+            <TaskCard
+              v-for="task in taskByStatus[board.key]"
+              :key="task.id"
+              :task="task"
+              @update:completed="task.completed = $event"
+              @remove="removeTask"
+            />
           </ul>
         </div>
 

@@ -1,0 +1,22 @@
+<script setup>
+import { Trash2 } from 'lucide-vue-next'
+
+const props = defineProps({
+  task: {
+    type: Object,
+    required: true
+  }
+})
+
+const emit = defineEmits(['update:completed', 'remove'])
+</script>
+
+<template>
+  <li class="flex items-center justify-start gap-2 bg-white rounded-[8px] px-3 py-2.5">
+    <input type="checkbox" :checked="task.completed" @change="emit('update:completed', !task.completed)" />
+    <span>{{ task.title }}</span>
+    <button @click="emit('remove', task)" class="text-red-400">
+      <Trash2 size="15" />
+    </button>
+  </li>
+</template>
