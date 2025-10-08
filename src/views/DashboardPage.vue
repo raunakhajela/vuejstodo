@@ -217,9 +217,6 @@ const taskByStatus = computed(() => ({
         </div>
 
       </div>
-      <!-- <pre>
-          {{ tasks }}
-        </pre> -->
     </main>
   </div>
 </template>
