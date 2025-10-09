@@ -1,6 +1,18 @@
 <script setup>
-import DashboardHeader from '@/components/DashboardHeader.vue'
+import { ref } from 'vue';
+import DashboardHeader from '@/components/DashboardHeader.vue';
 
+const lists = ref([
+  { id: 1, name: 'Personal', color: 'bg-red-400' },
+  { id: 2, name: 'Work', color: 'bg-green-400' },
+  { id: 3, name: 'Shopping', color: 'bg-blue-400' },
+  { id: 4, name: 'Wishlist', color: 'bg-yellow-400' },
+  { id: 5, name: 'Fitness', color: 'bg-pink-400' },
+  { id: 6, name: 'Travel', color: 'bg-cyan-400' },
+  { id: 7, name: 'Projects', color: 'bg-purple-400' },
+  { id: 8, name: 'Ideas', color: 'bg-violet-400' },
+  { id: 9, name: 'Goals', color: 'bg-fuchsia-400' },
+]);
 </script>
 
 <template>
@@ -53,8 +65,8 @@ import DashboardHeader from '@/components/DashboardHeader.vue'
         </div>
         <div class="w-4/5">
           <ul class="grid grid-cols-4 gap-4">
-            <li class="flex items-center justify-start gap-2 bg-white rounded-[8px] px-3 py-2.5">
-              <span>All Lists</span>
+            <li v-for="list in lists" class="w-full h-32 flex items-center justify-center gap-2 bg-white rounded-[8px] px-3 py-2.5">
+              <span>{{ list.name }}</span>
             </li>
           </ul>
         </div>
