@@ -1,9 +1,18 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useCollection, useFirestore, useCurrentUser } from 'vuefire'
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import DashboardHeader from '@/components/DashboardHeader.vue'
 import AddTask from '@/components/AddTask.vue'
 import TaskCard from '@/components/TaskCard.vue'
 import { Plus } from 'lucide-vue-next'
+
+const db = useFirestore();
+const user = useCurrentUser();
+const loading = ref(false);
+const error = ref(null);
+const tasks = useCollection(collection(db, 'tasks'));
+const newListName = ref('')
 
 const toggleTaskInput = ref({ BACKLOG: false, TODO: false, INPROGRESS: false })
 
@@ -26,159 +35,24 @@ const listBoards = ref([
   }
 ]);
 
-const tasks = ref([
-  {
-    "id": 1,
-    "title": "Buy groceries",
-    "created_at": "2025-09-01",
-    "status": "BACKLOG",
-    "completed": false
-  },
-  {
-    "id": 2,
-    "title": "Call the dentist",
-    "created_at": "2025-09-02",
-    "status": "TODO",
-    "completed": false
-  },
-  {
-    "id": 3,
-    "title": "Clean the kitchen",
-    "created_at": "2025-09-03",
-    "status": "INPROGRESS",
-    "completed": false
-  },
-  {
-    "id": 4,
-    "title": "Finish reading a book",
-    "created_at": "2025-09-04",
-    "status": "BACKLOG",
-    "completed": true
-  },
-  {
-    "id": 5,
-    "title": "Water the plants",
-    "created_at": "2025-09-05",
-    "status": "TODO",
-    "completed": false
-  },
-  {
-    "id": 6,
-    "title": "Pay electricity bill",
-    "created_at": "2025-09-06",
-    "status": "INPROGRESS",
-    "completed": false
-  },
-  {
-    "id": 7,
-    "title": "Organize closet",
-    "created_at": "2025-09-07",
-    "status": "BACKLOG",
-    "completed": false
-  },
-  {
-    "id": 8,
-    "title": "Take the car for service",
-    "created_at": "2025-09-08",
-    "status": "TODO",
-    "completed": true
-  },
-  {
-    "id": 9,
-    "title": "Plan weekend trip",
-    "created_at": "2025-09-09",
-    "status": "INPROGRESS",
-    "completed": false
-  },
-  {
-    "id": 10,
-    "title": "Buy birthday gift",
-    "created_at": "2025-09-10",
-    "status": "BACKLOG",
-    "completed": false
-  },
-  {
-    "id": 11,
-    "title": "Cook dinner for friends",
-    "created_at": "2025-09-11",
-    "status": "TODO",
-    "completed": false
-  },
-  {
-    "id": 12,
-    "title": "Do laundry",
-    "created_at": "2025-09-12",
-    "status": "INPROGRESS",
-    "completed": true
-  },
-  {
-    "id": 13,
-    "title": "Fix leaking tap",
-    "created_at": "2025-09-13",
-    "status": "BACKLOG",
-    "completed": false
-  },
-  {
-    "id": 14,
-    "title": "Go for a morning walk",
-    "created_at": "2025-09-14",
-    "status": "TODO",
-    "completed": true
-  },
-  {
-    "id": 15,
-    "title": "Write journal entry",
-    "created_at": "2025-09-15",
-    "status": "INPROGRESS",
-    "completed": false
-  },
-  {
-    "id": 16,
-    "title": "Buy new shoes",
-    "created_at": "2025-09-16",
-    "status": "BACKLOG",
-    "completed": false
-  },
-  {
-    "id": 17,
-    "title": "Update resume",
-    "created_at": "2025-09-17",
-    "status": "TODO",
-    "completed": false
-  },
-  {
-    "id": 18,
-    "title": "Clean laptop screen",
-    "created_at": "2025-09-18",
-    "status": "INPROGRESS",
-    "completed": true
-  },
-  {
-    "id": 19,
-    "title": "Call parents",
-    "created_at": "2025-09-19",
-    "status": "BACKLOG",
-    "completed": false
-  },
-  {
-    "id": 20,
-    "title": "Practice guitar",
-    "created_at": "2025-09-20",
-    "status": "TODO",
-    "completed": false
-  }
-]);
-
-function addTask({ title, status }) {
+async function addTask({ title, status }) {
   console.log(title, status);
-  tasks.value.push({
-    id: tasks.value.length + 1,
-    title,
-    created_at: new Date().toISOString().split('T')[0],
-    status,
-    completed: false
-  })
-  console.log(tasks.value)
+
+  try {
+    const newTask = {
+      title,
+      status,
+      completed: false,
+      owner: user.value.uid,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    };
+
+    const docRef = await addDoc(collection(db, 'tasks'), newTask);
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
 }
 
 function removeTask(task) {
