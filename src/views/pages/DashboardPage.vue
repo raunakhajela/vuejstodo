@@ -1,7 +1,12 @@
 <script setup>
 import { ref } from 'vue';
+import { useCollection, useFirestore, useCurrentUser } from 'vuefire'
 import DashboardHeader from '@/components/DashboardHeader.vue';
 
+const db = useFirestore();
+const user = useCurrentUser();
+const loading = ref(false);
+const error = ref(null);
 const lists = ref([
   { id: 1, name: 'Personal', color: 'bg-red-400' },
   { id: 2, name: 'Work', color: 'bg-green-400' },
@@ -13,6 +18,24 @@ const lists = ref([
   { id: 8, name: 'Ideas', color: 'bg-violet-400' },
   { id: 9, name: 'Goals', color: 'bg-fuchsia-400' },
 ]);
+const newListName = ref('')
+const newListColor = ref('#6366f1')
+
+function addList() {
+  if(!newListName.value) return;
+
+  const newList = {
+    id: lists.value.length + 1,
+    name: newListName.value,
+    color: 'bg-red-400'
+  };
+  
+  lists.value.push(newList);
+}
+
+function cancel() {
+  newListName.value = '';
+}
 </script>
 
 <template>
@@ -47,16 +70,15 @@ const lists = ref([
               </div>
 
               <!-- List Name Input -->
-              <input type="text" placeholder="List name"
+              <input type="text" placeholder="List name" v-model="newListName"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
 
               <!-- Action Buttons -->
               <div class="flex gap-2">
-                <button class="flex-1 bg-indigo-600 text-white px-3 py-1.5 rounded-md hover:bg-indigo-700 text-sm">
+                <button @click="addList" class="flex-1 bg-indigo-600 text-white px-3 py-1.5 rounded-md hover:bg-indigo-700 text-sm">
                   Create List
                 </button>
-                <button
-                  class="flex-1 border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm">
+                <button @click="cancel" class="flex-1 border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm">
                   Cancel
                 </button>
               </div>

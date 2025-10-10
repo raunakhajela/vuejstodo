@@ -21,6 +21,6 @@ const onAddTask = () => {
 <template>
     <input type="text" class="w-full p-2 border border-gray-300 rounded-md" id="addTask" name="addTask" required
         placeholder="Add new task" v-model="inputTitle" />
-    <button @click="onAddTask()" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Add
+    <button @click="onAddTask" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Add
         task</button>
 </template>
