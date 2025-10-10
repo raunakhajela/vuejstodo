@@ -1,41 +1,44 @@
 <script setup>
 import { ref } from 'vue';
 import { useCollection, useFirestore, useCurrentUser } from 'vuefire'
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import DashboardHeader from '@/components/DashboardHeader.vue';
+import { update } from 'firebase/database';
 
 const db = useFirestore();
 const user = useCurrentUser();
 const loading = ref(false);
 const error = ref(null);
-const lists = ref([
-  { id: 1, name: 'Personal', color: 'bg-red-400' },
-  { id: 2, name: 'Work', color: 'bg-green-400' },
-  { id: 3, name: 'Shopping', color: 'bg-blue-400' },
-  { id: 4, name: 'Wishlist', color: 'bg-yellow-400' },
-  { id: 5, name: 'Fitness', color: 'bg-pink-400' },
-  { id: 6, name: 'Travel', color: 'bg-cyan-400' },
-  { id: 7, name: 'Projects', color: 'bg-purple-400' },
-  { id: 8, name: 'Ideas', color: 'bg-violet-400' },
-  { id: 9, name: 'Goals', color: 'bg-fuchsia-400' },
-]);
+const lists = useCollection(collection(db, 'lists'));
 const newListName = ref('')
 const newListColor = ref('#6366f1')
 
 async function addList() {
-  if(!newListName.value) return;
-
-  const newList = {
-    id: lists.value.length + 1,
-    name: newListName.value,
-    color: 'bg-red-400'
+  if(!user.value) {
+    error.value = "User not authenticated";
+    return;
   };
 
-  const docRef = await addDoc(collection(db, 'lists'), newList);
+  if (!newListName.value) {
+    error.value = "List name cannot be empty";
+    return;
+  };
 
-  lists.value.push(newList);
+  try {
+    const newList = {
+      name: newListName.value,
+      owner: user.value.uid,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    };
 
-  newListName.value = '';
+    const docRef = await addDoc(collection(db, 'lists'), newList);
+    console.log("Document written with ID: ", docRef.id);
+
+    newListName.value = '';
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
 }
 
 function cancel() {
@@ -80,19 +83,24 @@ function cancel() {
 
               <!-- Action Buttons -->
               <div class="flex gap-2">
-                <button @click="addList" class="flex-1 bg-indigo-600 text-white px-3 py-1.5 rounded-md hover:bg-indigo-700 text-sm">
+                <button @click="addList"
+                  class="flex-1 bg-indigo-600 text-white px-3 py-1.5 rounded-md hover:bg-indigo-700 text-sm">
                   Create List
                 </button>
-                <button @click="cancel" class="flex-1 border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm">
+                <button @click="cancel"
+                  class="flex-1 border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm">
                   Cancel
                 </button>
               </div>
+
+              <div v-if="error" class="text-red-500 text-sm">{{ error }}</div>
             </div>
           </div>
         </div>
         <div class="w-4/5">
           <ul class="grid grid-cols-4 gap-4">
-            <li v-for="list in lists" class="w-full h-32 flex items-center justify-center gap-2 bg-white rounded-[8px] px-3 py-2.5">
+            <li v-for="list in lists"
+              class="w-full h-32 flex items-center justify-center gap-2 bg-white rounded-[8px] px-3 py-2.5">
               <span>{{ list.name }}</span>
             </li>
           </ul>
