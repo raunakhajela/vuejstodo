@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useCollection, useFirestore, useCurrentUser } from 'vuefire'
+import { addDoc, collection } from 'firebase/firestore';
 import DashboardHeader from '@/components/DashboardHeader.vue';
 
 const db = useFirestore();
@@ -21,7 +22,7 @@ const lists = ref([
 const newListName = ref('')
 const newListColor = ref('#6366f1')
 
-function addList() {
+async function addList() {
   if(!newListName.value) return;
 
   const newList = {
@@ -29,8 +30,12 @@ function addList() {
     name: newListName.value,
     color: 'bg-red-400'
   };
-  
+
+  const docRef = await addDoc(collection(db, 'lists'), newList);
+
   lists.value.push(newList);
+
+  newListName.value = '';
 }
 
 function cancel() {
