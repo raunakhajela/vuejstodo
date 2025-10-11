@@ -10,7 +10,6 @@ const routes = [
   { path: '/signup', component: SignupPage, meta: { requiresGuest: true } },
   { path: '/login', component: LoginPage, meta: { requiresGuest: true } },
   { path: '/dashboard', component: DashboardPage, meta: { requiresAuth: true } },
-  { path: '/tasks', component: TasksPage, meta: { requiresAuth: true } },
   { path: '/auth', component: Auth },
   { path: '/dashboard-layout', component: DashboardLayout },
   { path: '/:pathMatch(.*)*', redirect: '/dashboard' }, // change to NotFound.vue component later

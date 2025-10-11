@@ -2,19 +2,20 @@
 import { ref } from 'vue';
 import { useCollection, useFirestore, useCurrentUser } from 'vuefire'
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import DashboardHeader from '@/components/DashboardHeader.vue';
-import { update } from 'firebase/database';
+import { Plus } from 'lucide-vue-next'
+import TasksPage from './TasksPage.vue';
 
 const db = useFirestore();
 const user = useCurrentUser();
 const loading = ref(false);
 const error = ref(null);
 const lists = useCollection(collection(db, 'lists'));
-const newListName = ref('')
-const newListColor = ref('#6366f1')
+const newListName = ref('');
+const newListColor = ref('#6366f1');
+const toggleAddList = ref(false);
 
 async function addList() {
-  if(!user.value) {
+  if (!user.value) {
     error.value = "User not authenticated";
     return;
   };
@@ -47,63 +48,59 @@ function cancel() {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#e8e8e8]">
-    <DashboardHeader />
-
-    <main class="w-full h-screen mx-auto py-6 sm:px-6 lg:px-8">
-      <div class="w-full h-full pb-20 flex gap-4 cursor-default">
-        <div class="w-1/5 bg-white border-r border-gray-200 h-fit flex flex-col">
+  <div class="min-h-screen bg-zinc-50">
+    <main class="w-full h-screen mx-auto p-4">
+      <div class="w-full h-full flex gap-4 cursor-default">
+        <div class="w-64 h-full flex flex-col gap-4">
           <!-- Header -->
-          <div class="p-4 border-b border-gray-200">
-            <div class="flex items-center justify-between">
-              <h2 class="text-lg font-semibold text-gray-900">Lists</h2>
-            </div>
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-semibold text-gray-900">Lists</h2>
+            <Plus size="18" @click="toggleAddList = !toggleAddList" class="cursor-pointer" />
           </div>
 
           <!-- Create List Form -->
-          <div class="p-4 border-b border-gray-200 bg-gray-50">
-            <div class="space-y-3">
-              <!-- Color Picker -->
-              <div class="flex gap-2">
-                <div class="w-6 h-6 rounded-full conic-gradient transition-all"></div>
-                <div class="w-6 h-6 rounded-full bg-red-400 border-transparent border-2 transition-all"></div>
-                <div class="w-6 h-6 rounded-full bg-green-400 border-transparent border-2 transition-all"></div>
-                <div class="w-6 h-6 rounded-full bg-blue-400 border-transparent border-2 transition-all"></div>
-                <div class="w-6 h-6 rounded-full bg-yellow-400 border-transparent border-2 transition-all"></div>
-                <div class="w-6 h-6 rounded-full bg-pink-400 border-transparent border-2 transition-all"></div>
-                <div class="w-6 h-6 rounded-full bg-cyan-400 border-transparent border-2 transition-all"></div>
-                <div class="w-6 h-6 rounded-full bg-purple-400 border-transparent border-2 transition-all"></div>
-                <div class="w-6 h-6 rounded-full bg-violet-400 border-transparent border-2 transition-all"></div>
-                <div class="w-6 h-6 rounded-full bg-fuchsia-400 border-transparent border-2 transition-all"></div>
-              </div>
-
-              <!-- List Name Input -->
-              <input type="text" placeholder="List name" v-model="newListName"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-
-              <!-- Action Buttons -->
-              <div class="flex gap-2">
-                <button @click="addList"
-                  class="flex-1 bg-indigo-600 text-white px-3 py-1.5 rounded-md hover:bg-indigo-700 text-sm">
-                  Create List
-                </button>
-                <button @click="cancel"
-                  class="flex-1 border border-gray-300 text-gray-700 px-3 py-1.5 rounded-md hover:bg-gray-50 text-sm">
-                  Cancel
-                </button>
-              </div>
-
-              <div v-if="error" class="text-red-500 text-sm">{{ error }}</div>
+          <div v-if="toggleAddList"
+            class="flex flex-col gap-4 bg-white border border-zinc-200 rounded-md shadow-sm p-4">
+            <!-- Color Picker -->
+            <div class="flex items-center justify-center gap-2">
+              <div class="w-6 h-6 rounded-full conic-gradient transition-all"></div>
+              <div class="w-6 h-6 rounded-full bg-red-400 border-transparent border-2 transition-all"></div>
+              <div class="w-6 h-6 rounded-full bg-green-400 border-transparent border-2 transition-all"></div>
+              <div class="w-6 h-6 rounded-full bg-blue-400 border-transparent border-2 transition-all"></div>
+              <div class="w-6 h-6 rounded-full bg-yellow-400 border-transparent border-2 transition-all"></div>
+              <div class="w-6 h-6 rounded-full bg-pink-400 border-transparent border-2 transition-all"></div>
+              <div class="w-6 h-6 rounded-full bg-cyan-400 border-transparent border-2 transition-all"></div>
             </div>
+
+            <!-- List Name Input -->
+            <input type="text" placeholder="List name" v-model="newListName"
+              class="px-3 py-2 text-sm border border-zinc-200 rounded-md focus:outline-none" />
+
+            <!-- Action Buttons -->
+            <div class="flex gap-2">
+              <button @click="addList"
+                class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white text-sm p-1 border border-transparent rounded-md">
+                Create list
+              </button>
+              <button v-if="toggleAddList" @click="cancel"
+                class="flex-1 bg-white hover:bg-transparent text-zinc-700 text-sm p-1 border border-zinc-200 rounded-md">
+                Clear
+              </button>
+            </div>
+
+            <div v-if="error" class="text-red-500 text-sm">{{ error }}</div>
           </div>
-        </div>
-        <div class="w-4/5">
-          <ul class="grid grid-cols-4 gap-4">
+
+          <ul class="flex flex-col gap-2">
             <li v-for="list in lists"
-              class="w-full h-32 flex items-center justify-center gap-2 bg-white rounded-[8px] px-3 py-2.5">
-              <span>{{ list.name }}</span>
+              class="flex items-center justify-start gap-2 bg-transparent hover:bg-zinc-200 rounded-md px-2 py-1 cursor-pointer">
+              <div class="w-3 h-3 rounded-sm bg-zinc-300"></div>
+              <span class="text-sm text-zinc-700 hover:text-zinc-900">{{ list.name }}</span>
             </li>
           </ul>
+        </div>
+        <div class="w-full bg-white border border-zinc-200 rounded-lg shadow-sm">
+          <TasksPage />
         </div>
       </div>
     </main>

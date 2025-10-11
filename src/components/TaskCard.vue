@@ -12,7 +12,7 @@ const emit = defineEmits(['update:completed', 'remove'])
 </script>
 
 <template>
-  <li class="flex items-center justify-start gap-2 bg-white rounded-[8px] px-3 py-2.5">
+  <li class="flex items-center justify-start gap-2 bg-zinc-100 rounded-md px-2 py-1">
     <input type="checkbox" :checked="task.completed" @change="emit('update:completed', !task.completed)" />
     <span>{{ task.title }}</span>
     <button @click="emit('remove', task)" class="text-red-400">

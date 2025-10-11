@@ -2,7 +2,6 @@
 import { ref, computed } from 'vue'
 import { useCollection, useFirestore, useCurrentUser } from 'vuefire'
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import DashboardHeader from '@/components/DashboardHeader.vue'
 import AddTask from '@/components/AddTask.vue'
 import TaskCard from '@/components/TaskCard.vue'
 import { Plus } from 'lucide-vue-next'
@@ -69,14 +68,12 @@ const taskByStatus = computed(() => ({
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#e8e8e8]">
-    <DashboardHeader />
-
-    <main class="w-full h-screen mx-auto py-6 sm:px-6 lg:px-8">
-      <div class="w-full h-full pb-20 grid grid-cols-4 gap-4 cursor-default">
+  <div>
+    <main class="w-full py-6 sm:px-6 lg:px-8">
+      <div class="w-full grid grid-cols-4 gap-6 cursor-default">
 
         <div v-for="board in listBoards" :key="board.key"
-          class="bg-[#F5F4F4] border border-[#cccccc] rounded-lg px-4 py-3">
+          class="">
           <div class="flex items-center justify-between text-lg font-bold text-gray-900 mb-4">
             <h2>{{ board.title }}</h2>
             <Plus size="18" @click="toggleTaskInput[board.key] = !toggleTaskInput[board.key]" class="cursor-pointer" />
