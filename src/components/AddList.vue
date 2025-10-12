@@ -1,0 +1,77 @@
+<script setup>
+import { ref } from 'vue'
+
+const newListName = ref('')
+const newListColor = ref('#6366f1')
+const error = ref(null)
+
+const emit = defineEmits(['add-list', 'cancel'])
+
+function handleSubmit() {
+  if (!newListName.value) {
+    error.value = "List name cannot be empty"
+    return
+  }
+
+  emit('add-list', {
+    name: newListName.value,
+    color: newListColor.value
+  })
+
+  newListName.value = ''
+  newListColor.value = '#6366f1'
+  error.value = null
+}
+
+function handleCancel() {
+  newListName.value = ''
+  error.value = null
+  emit('cancel')
+}
+</script>
+
+<template>
+  <div class="flex flex-col gap-4 bg-white border border-zinc-200 rounded-md shadow-sm p-4">
+    <!-- Color Picker -->
+    <div class="flex items-center justify-center gap-2">
+      <div class="w-6 h-6 rounded-full conic-gradient transition-all cursor-pointer"></div>
+      <div class="w-6 h-6 rounded-full bg-red-400 border-transparent border-2 transition-all cursor-pointer"></div>
+      <div class="w-6 h-6 rounded-full bg-green-400 border-transparent border-2 transition-all cursor-pointer"></div>
+      <div class="w-6 h-6 rounded-full bg-blue-400 border-transparent border-2 transition-all cursor-pointer"></div>
+      <div class="w-6 h-6 rounded-full bg-yellow-400 border-transparent border-2 transition-all cursor-pointer"></div>
+      <div class="w-6 h-6 rounded-full bg-pink-400 border-transparent border-2 transition-all cursor-pointer"></div>
+      <div class="w-6 h-6 rounded-full bg-cyan-400 border-transparent border-2 transition-all cursor-pointer"></div>
+    </div>
+
+    <!-- List Name Input -->
+    <input
+      type="text"
+      placeholder="List name"
+      v-model="newListName"
+      @keyup.enter="handleSubmit"
+      class="px-3 py-2 text-sm border border-zinc-200 rounded-md focus:outline-none"
+    />
+
+    <!-- Action Buttons -->
+    <div class="flex gap-2">
+      <button
+        @click="handleSubmit"
+        class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white text-sm p-1 border border-transparent rounded-md">
+        Create list
+      </button>
+      <button
+        @click="handleCancel"
+        class="flex-1 bg-white hover:bg-transparent text-zinc-700 text-sm p-1 border border-zinc-200 rounded-md">
+        Clear
+      </button>
+    </div>
+
+    <div v-if="error" class="text-red-500 text-sm">{{ error }}</div>
+  </div>
+</template>
+
+<style scoped>
+.conic-gradient {
+  background: conic-gradient(from 90deg at 50% 50%, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff, #ff0000);
+}
+</style>
