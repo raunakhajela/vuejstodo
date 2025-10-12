@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useCollection, useFirestore, useCurrentUser } from 'vuefire'
-import { addDoc, collection, serverTimestamp, doc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, serverTimestamp, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import AddTask from '@/components/AddTask.vue'
 import TaskCard from '@/components/TaskCard.vue'
 import { Plus } from 'lucide-vue-next'
@@ -66,9 +66,14 @@ async function updateTaskCompleted(task, completed) {
   }
 }
 
-function removeTask(task) {
-  console.log(task)
-  tasks.value = tasks.value.filter(t => t !== task)
+async function removeTask(task) {
+  try {
+    const taskRef = doc(db, 'tasks', task.id);
+    await deleteDoc(taskRef);
+    console.log("Task deleted successfully");
+  } catch (e) {
+    console.error("Error deleting task: ", e);
+  }
 }
 
 const taskByStatus = computed(() => ({
