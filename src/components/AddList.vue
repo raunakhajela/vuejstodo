@@ -1,14 +1,17 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import { Check } from 'lucide-vue-next';
 
 const newListName = ref('');
 const newListColor = ref('rainbow');
+const lastCustomColor = ref('rainbow');
 const error = ref(null);
+const colorPickerRef = ref(null);
 
 const emit = defineEmits(['add-list', 'cancel']);
 
 const availableColors = [
-  { value: 'rainbow', name: 'Rainbow', class: 'conic-gradient' },
+  { value: 'custom', name: 'Custom Color', isCustom: true },
   { value: '#f87171', name: 'Red', class: 'bg-red-400' },
   { value: '#4ade80', name: 'Green', class: 'bg-green-400' },
   { value: '#60a5fa', name: 'Blue', class: 'bg-blue-400' },
@@ -17,8 +20,39 @@ const availableColors = [
   { value: '#22d3ee', name: 'Cyan', class: 'bg-cyan-400' },
 ];
 
-function selectColor(colorValue) {
-  newListColor.value = colorValue;
+// Get preset colors
+const presetColors = availableColors.filter(c => !c.isCustom);
+
+// Select random color on mount
+onMounted(() => {
+  const randomIndex = Math.floor(Math.random() * presetColors.length);
+  newListColor.value = presetColors[randomIndex].value;
+});
+
+// Check if current color is custom (not in preset list and not rainbow)
+const isCustomColor = computed(() => {
+  return newListColor.value !== 'rainbow' &&
+         !availableColors.some(c => c.value === newListColor.value && !c.isCustom);
+});
+
+// Check if custom button should show rainbow
+const showRainbow = computed(() => {
+  return lastCustomColor.value === 'rainbow';
+});
+
+function selectColor(colorValue, isCustom = false) {
+  if (isCustom) {
+    // Open native color picker directly
+    colorPickerRef.value?.click();
+  } else {
+    newListColor.value = colorValue;
+  }
+}
+
+function onColorChange(event) {
+  // Update color in real-time as user selects
+  newListColor.value = event.target.value;
+  lastCustomColor.value = event.target.value; // Remember the custom color
 }
 
 function handleSubmit() {
@@ -27,9 +61,12 @@ function handleSubmit() {
     return;
   }
 
+  // If rainbow is selected (user didn't pick custom color), use a default color
+  const colorToSave = newListColor.value === 'rainbow' ? '#60a5fa' : newListColor.value;
+
   emit('add-list', {
     name: newListName.value,
-    color: newListColor.value
+    color: colorToSave
   })
 
   newListName.value = '';
@@ -37,24 +74,65 @@ function handleSubmit() {
   error.value = null;
 }
 
-function handleCancel() {
+function handleReset() {
+  // Reset to defaults with random color
   newListName.value = '';
-  newListColor.value = 'rainbow';
+
+  // Select a new random color
+  const randomIndex = Math.floor(Math.random() * presetColors.length);
+  newListColor.value = presetColors[randomIndex].value;
+
+  lastCustomColor.value = 'rainbow';
   error.value = null;
-  emit('cancel')
 }
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 bg-white border border-zinc-200 rounded-md shadow-sm p-4">
+  <div class="flex flex-col gap-4 bg-white border border-zinc-200 rounded-md shadow-sm p-4 relative overflow-visible">
     <!-- Color Picker -->
     <div class="flex items-center justify-center gap-2">
-      <div v-for="color in availableColors" :key="color.value" @click="selectColor(color.value)" :class="[
-        'w-6 h-6 rounded-full border-2 transition-all cursor-pointer',
-        color.class,
-        newListColor === color.value ? 'border-gray-800 scale-110' : 'border-transparent'
-      ]" :title="color.name"></div>
+      <div
+        v-if="availableColors[0].isCustom"
+        @click="selectColor(availableColors[0].value, true)"
+        :style="showRainbow ? {} : { backgroundColor: lastCustomColor }"
+        class="w-6 h-6 rounded-full transition-all cursor-pointer relative flex items-center justify-center"
+        :class="showRainbow ? 'conic-gradient' : ''"
+        :title="availableColors[0].name"
+      >
+        <Check
+          v-if="newListColor === 'rainbow' || isCustomColor"
+          :size="14"
+          :stroke-width="3"
+          class="text-white drop-shadow-sm"
+          :class="{ 'text-gray-800': !showRainbow && (lastCustomColor === '#dddddd' || lastCustomColor === '#ffffff') }"
+        />
+      </div>
+
+      <!-- Preset Colors -->
+      <div
+        v-for="color in availableColors.slice(1)"
+        :key="color.value"
+        @click="selectColor(color.value, color.isCustom)"
+        class="w-6 h-6 rounded-full transition-all cursor-pointer relative flex items-center justify-center"
+        :class="color.class"
+        :title="color.name"
+      >
+        <Check
+          v-if="newListColor === color.value"
+          :size="14"
+          :stroke-width="3"
+          class="text-white drop-shadow-sm"
+        />
+      </div>
     </div>
+
+    <input
+      ref="colorPickerRef"
+      type="color"
+      @input="onColorChange"
+      class="absolute opacity-0 pointer-events-none"
+      style="left: 50%; top: 50%; transform: translate(-50%, -50%);"
+    />
 
     <!-- List Name Input -->
     <input type="text" placeholder="List name" v-model="newListName" @keyup.enter="handleSubmit"
@@ -66,9 +144,9 @@ function handleCancel() {
         class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white text-sm p-1 border border-transparent rounded-md">
         Create list
       </button>
-      <button @click="handleCancel"
-        class="flex-1 bg-white hover:bg-transparent text-zinc-700 text-sm p-1 border border-zinc-200 rounded-md">
-        Clear
+      <button @click="handleReset"
+        class="flex-1 bg-white hover:bg-zinc-50 text-zinc-700 text-sm p-1 border border-zinc-200 rounded-md">
+        Reset
       </button>
     </div>
 
