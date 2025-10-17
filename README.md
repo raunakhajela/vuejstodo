@@ -1,14 +1,17 @@
-# vuejstodo
+# Todo app
 
-This template should help get you started developing with Vue 3 in Vite.
+A simple todo app built with VueJS and Firebase. Create lists, add tasks, and sync them in real time.
 
-## Recommended IDE Setup
+---
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## 🚀 Features
 
-## Customize configuration
+- Create and manage multiple lists
+- Add, edit, and delete tasks
+- Real-time sync using Firebase Firestore
+- Easy to customize and expand
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+---
 
 ## Project Setup
 
@@ -27,3 +30,15 @@ yarn dev
 ```sh
 yarn build
 ```
+
+---
+
+## Contributing
+
+If you know a great technical blog that deserves to be here, please contribute. You can find the details in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
+
+## License
+
+This repository is licensed under the [MIT License](LICENSE).
