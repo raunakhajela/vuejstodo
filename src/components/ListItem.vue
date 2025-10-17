@@ -1,5 +1,7 @@
 <script setup>
-import { computed } from 'vue'
+import { computed } from 'vue';
+import { Trash2 } from 'lucide-vue-next';
+  ;
 
 const props = defineProps({
   list: {
@@ -8,7 +10,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['click'])
+const emit = defineEmits(['click', 'remove']);
 
 // If list doesn't have a color, use a fallback
 const listColor = computed(() => {
@@ -22,15 +24,16 @@ function isRainbow(color) {
 </script>
 
 <template>
-  <li
-    @click="emit('click', list)"
-    class="flex items-center justify-start gap-2 bg-transparent hover:bg-zinc-200 rounded-md px-2 py-1 cursor-pointer">
-    <div
-      class="w-3 h-3 rounded-sm"
-      :class="{ 'conic-gradient': isRainbow(listColor) }"
-      :style="!isRainbow(listColor) ? { backgroundColor: listColor } : {}"
-    ></div>
-    <span class="text-sm text-zinc-700 hover:text-zinc-900">{{ list.name }}</span>
+  <li @click="emit('click', list)"
+    class="flex justify-between bg-transparent hover:bg-zinc-200 rounded-md px-2 py-1 cursor-pointer">
+    <div class="flex items-center gap-2">
+      <div class="w-3 h-3 rounded-sm" :class="{ 'conic-gradient': isRainbow(listColor) }"
+        :style="!isRainbow(listColor) ? { backgroundColor: listColor } : {}"></div>
+      <span class="text-sm text-zinc-700 hover:text-zinc-900">{{ list.name }}</span>
+    </div>
+    <button @click="emit('remove', list)" class="text-red-400">
+      <Trash2 size="15" />
+    </button>
   </li>
 </template>
 
