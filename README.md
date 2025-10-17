@@ -4,7 +4,7 @@ A simple todo app built with VueJS and Firebase. Create lists, add tasks, and sy
 
 ---
 
-## 🚀 Features
+## Features
 
 - Create and manage multiple lists
 - Add, edit, and delete tasks
