@@ -1,15 +1,15 @@
 <script setup>
-import { ref } from 'vue'
-import { useCollection, useFirestore, useCurrentUser } from 'vuefire'
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
-import { Plus, Minus } from 'lucide-vue-next'
-import AddList from './AddList.vue'
-import ListItem from './ListItem.vue'
+import { ref } from 'vue';
+import { useCollection, useFirestore, useCurrentUser } from 'vuefire';
+import { addDoc, collection, serverTimestamp, doc, deleteDoc } from 'firebase/firestore';
+import { Plus, Minus } from 'lucide-vue-next';
+import AddList from './AddList.vue';
+import ListItem from './ListItem.vue';
 
-const db = useFirestore()
-const user = useCurrentUser()
-const lists = useCollection(collection(db, 'lists'))
-const toggleAddList = ref(false)
+const db = useFirestore();
+const user = useCurrentUser();
+const lists = useCollection(collection(db, 'lists'));
+const toggleAddList = ref(false);
 
 async function handleAddList({ name, color }) {
   if (!user.value) {
@@ -35,6 +35,16 @@ async function handleAddList({ name, color }) {
 
 function handleListClick(list) {
   console.log("List clicked:", list)
+}
+
+async function handleRemoveList(list) {
+  try {
+    const listRef = doc(db, 'lists', list.id)
+    await deleteDoc(listRef)
+    console.log("List deleted with ID: ", list.id)
+  } catch (e) {
+    console.error("Error deleting list: ", e)
+  }
 }
 </script>
 
@@ -78,6 +88,7 @@ function handleListClick(list) {
           :key="list.id"
           :list="list"
           @click="handleListClick"
+          @remove="handleRemoveList"
         />
       </ul>
     </div>
